@@ -1,0 +1,130 @@
+/* Feuille de styles CSS pour la zone de contenu des pages Web */
+/* Conçue par Stéphane Lapointe */
+/* Date: 2 novembre 2009 */
+
+/* Formulaires */
+input, select  {
+}
+input.btn  {
+	font-weight:bold;
+}
+
+/* Formulaire de connexion */
+#section-connexion  {
+	float:right;
+	background-color:#368AAF;
+	margin:5px 10px 0 0;
+	padding:10px 10px 0 0;
+	border:3px groove aqua;
+	font-size:12px;
+}
+#section-connexion p  {
+	margin:0;
+	padding:0 0 3px 0;
+	text-align:right;
+}
+#section-connexion input.txt  {
+	width:100px;
+}
+#section-connexion input.btn  {
+	font-weight:normal;
+}
+#section-connexion .infoUtil  {
+	color:lime;
+	font-weight:bold;
+	text-align:left;
+}
+#section-connexion a  {
+	color:#E87912;
+	font-weight:bold;
+	font-size:12px;
+}
+.msg-err-conn {
+	color:#D00;
+	background-color:#CCC;
+	text-align:center;
+	font-weight:bold;
+	padding: 10px;
+	margin:0 60px;
+}
+
+/* Formulaires de recherche de bières et d'ajout d'une bière */
+#form-rech-bieres, #form-ajout-biere {
+	margin:0 auto;
+	padding:10px;
+	width:400px;
+	border:2px groove aqua;
+}
+
+/* Pages d'erreurs */
+h2.erreurTitre  {
+	color:#D00;
+	background-color:#CCC;
+	border:none;
+	font-style:italic;
+}
+p.erreur-msg  {
+	color:#DD0;
+	font-weight:bold;
+}
+
+/* Brasseurs */
+.brasseur  {
+	clear:both;
+}
+.details-brasseur  {
+	text-align:center;
+	margin-right:30px;
+	float:right;
+}
+.details-brasseur img  {
+	width:75px;
+	float:left;
+}
+
+/* Section pour le personnel */
+.info-perso p  {
+	padding-bottom:0.5em;
+}
+.info-perso img  {
+	float:left;
+	width:100px;
+	margin:0 30px 10px 10px;
+}
+
+/* Section pour la navigation dans les pages de résultats de la recherche de bières */
+#nav-page-bieres {
+	text-align: center;
+	font-weight: bold;
+	color: #81CE09;
+	margin-top: 0.5em;
+}
+#nav-page-bieres img {
+	vertical-align: middle;
+}
+#nav-page-bieres a {
+	color: #81CE09;
+	text-decoration: none;
+}
+#nav-page-bieres a:hover {
+	color: #BFEC74;
+	text-decoration: none;
+}
+
+/* Messages de confirmation et d'erreur */
+.msg-err-rech-bieres, .msg-err-ajout-biere {
+	color:#D00;
+	background-color:#CCC;
+	text-align:center;
+	font-weight:bold;
+	padding: 5px;
+	margin:0 80px 10px 100px;
+}
+.msg-confirm-ajout-biere {
+	color:#099F1E;
+	background-color:#CCC;
+	text-align:center;
+	font-weight:bold;
+	padding: 5px;
+	margin:0 80px 10px 100px;
+}

@@ -1,0 +1,122 @@
+/* Feuille de styles CSS pour les éléments de base des pages Web */
+/* Conçue par Stéphane Lapointe */
+/* Date: 2 novembre 2009 */
+
+body  {
+	background-color:#CCC;
+	color:#FFFFCC;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:16px;
+}
+img  {
+	border:0;
+}
+p  {
+	text-indent:2em;
+	margin:0;
+	padding-bottom:1em;
+}
+strong  {
+	font-weight:bold;
+}
+
+/* Titres */
+/* ====== */
+h1  {
+	color:#53DFDF;
+	font-size:60px;
+	font-style:italic;
+	font-family:"Times New Roman", Times, serif;
+	margin:0;
+	padding:20px 0 0 0;
+}
+h2, h3, h4, h5, h6  {
+	font-family:"Times New Roman", Times, serif;
+	font-weight:bold;
+	margin:0 0 0.5em 0;
+	padding:0.2em 0 0 0;
+}
+h2, h3  {
+	color:#FFE25F;
+}
+h2  {
+	font-size:32px;
+	text-align:center;
+	margin-right:auto;
+	margin-left:auto;
+	border-bottom:2px solid #444;
+	padding-bottom:5px;
+	width:60%;
+}
+
+h3  {
+	font-size:22px;
+	font-style:italic;
+	border-bottom:1px solid red;}
+
+/* Listes */
+/* ====== */
+ul, ol  {
+	list-style-position:inside;
+	padding:0;
+	margin:1em 0 1em 2em;
+}
+ul  {
+	list-style-type:disc;
+}
+ol  {
+	list-style-type:decimal;
+}
+li  {
+	margin:0;
+	padding:0;
+}
+
+/* Liens hypertextes */
+/* ================= */
+a  {
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration:none;
+	font-size:14px;
+}
+a:link  {
+	color:#FFCC00;
+}
+a:visited  {
+	color:#CCCCCC;
+}
+a:hover  {
+	color:#FFFF00;
+	text-decoration:underline;
+}
+
+/* Tableaux */
+/* ======== */
+table  {
+	border:2px solid white;
+	margin-left:auto;
+	margin-right:auto;
+	border-collapse:collapse;
+}
+td, th  {
+	border:1px solid white;
+	padding:3px;
+}
+th  {
+	background-color:#FFFF00;
+	color:#444;
+	font-weight:bold;
+	text-align:center;
+}
+
+/* Erreurs */
+/* ======== */
+#msg-err-http-et-exception {
+	text-align:center;
+	font-weight:bold;
+	color:#D00;
+	background-color:#DDD;
+	padding:0.5em 0;
+	margin: 1em 0;
+}
+
