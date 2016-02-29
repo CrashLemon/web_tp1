@@ -118,10 +118,6 @@ public class ModeleRechBieres {
 			
 			// Liste des paramètres pour la requête SQL.
 			ArrayList<Object> params = new ArrayList<Object>();
-			
-			// Taux
-			float f_tauxMin;
-			float f_tauxMax;
 
 			// Est-ce que le mot clé doit être utilisé pour les critères de recherche ?
 			if (motCle != null) {
@@ -133,28 +129,68 @@ public class ModeleRechBieres {
 				params.add("%" + motCle + "%");
 			}
 			
-			// Verification du taux minimum.
-			if ( strTauxMin != null && !strTauxMin.isEmpty()){
+			// Verification des taux.
+			if ( strTauxMin != null || strTauxMax != null){
 				
-				try{
-					f_tauxMin = Float.parseFloat(strTauxMin);
+				float f_tauxMin = 0f;
+				float f_tauxMax = 0f;
+				boolean b_tauxMinIsValid = false;
+				boolean b_tauxMaxIsValid = false;
+				
+				// Verification que taux minimum est un nombre superieur a 0.
+				if (!strTauxMin.isEmpty()){
+					
+					try{
+						f_tauxMin = Float.parseFloat(strTauxMin);
+						
+						if (f_tauxMin < 0f){
+							setErreurDeRecherche("Le taux minimum doit etre plus grand que 0.0%.");
+						}
+						else{
+							b_tauxMinIsValid = true;
+						}
+					}
+					catch (NumberFormatException nfe){
+						setErreurDeRecherche("Taux minimum doit etre un nombre valide.");
+					}
 				}
-				catch (NumberFormatException nfe){
-					setErreurDeRecherche("Taux minimum doit etre un nombre");
+				
+				// Verification que taux maximum est un nombre superieur a 0.
+				if (!strTauxMax.isEmpty()){
+					try{
+						f_tauxMax = Float.parseFloat(strTauxMax);
+						if (f_tauxMax < 0){
+							setErreurDeRecherche("Le taux maximum doit etre plus grand que 0.0%.");
+						}
+						else{
+							b_tauxMaxIsValid = true;
+						}
+					}
+					catch (NumberFormatException nfe){
+						setErreurDeRecherche("Taux maximum doit etre un nombre valide.");
+					}
+				}
+				
+				// Validation des taux ensembles.
+				if (b_tauxMinIsValid && b_tauxMaxIsValid){
+					if (f_tauxMin > f_tauxMax){
+						setErreurDeRecherche("Le taux minimum doit etre inferieur au taux maximum.");
+					}
+					else{
+						conditions.add("(abv > ? AND abv < ?)");
+						params.add(f_tauxMin);
+						params.add(f_tauxMax);
+					}
+				}
+				else if (b_tauxMinIsValid){
+					conditions.add("(abv > ?)");
+					params.add(f_tauxMin);
+				}
+				else if (b_tauxMaxIsValid){
+					conditions.add("(abv < ?)");
+					params.add(f_tauxMax);
 				}
 			}
-			
-			// Verification du taux minimum.
-			if ( strTauxMin != null && !strTauxMin.isEmpty()){
-				try{
-					f_tauxMin = Float.parseFloat(strTauxMin);
-				}
-				catch (NumberFormatException nfe){
-					setErreurDeRecherche("Taux maximum doit etre un nombre");
-				}
-			}
-			
-			// TODO CHECK POUR LES < 0 ET PLuS GRAND QUE TAUX MAX ETC.....
 			
 			// Est-ce que la cotation doit être utilisée pour les critères de recherche ?
 			if (!categorie.equals("Toutes")) {
