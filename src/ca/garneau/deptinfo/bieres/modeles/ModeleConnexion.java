@@ -146,6 +146,9 @@ public class ModeleConnexion {
 			}
 
 		}
+		else{
+			setErreurDeConnexion("Informations incorrect.");
+		}
 		
 		
 	}

@@ -23,7 +23,6 @@
 					<input type="submit" name="btnConnexion" value="Connexion" class="btn" />
 				</p>
 				<c:if test="${sessionScope.modConnexion.erreurDeConnexion != null}">
-					<p>SALDASDASDHASDHASHDAS</p>
 					<p>${sessionScope.modConnexion.erreurDeConnexion}</p>
 				</c:if>
 			</form>
