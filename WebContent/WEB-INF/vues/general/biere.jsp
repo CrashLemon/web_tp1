@@ -3,16 +3,6 @@
 
 <h2>Détails de la bière no. ${param['noBiere']}</h2>
 
-<!-- this.setNoBiere(no);
-		this.setNoBrasseur(noBrasseur);
-		this.setNom(nom);
-		this.setNoCategorie(noCategorie);
-		this.setNoStyle(noStyle);
-		this.setTauxAlcool(tauxAlcool);
-		this.setDateModification(dateModification);
-		this.setDescription(description);
-		this.setImage(image);
--->
 <c:if test="${not empty requestScope.biere}">
 	
 	<c:if test="${not empty biere.image}">

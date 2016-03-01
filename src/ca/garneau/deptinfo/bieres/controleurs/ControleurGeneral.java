@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ca.garneau.deptinfo.bieres.beans.ConnexionBean;
 import ca.garneau.deptinfo.bieres.classes.Biere;
 import ca.garneau.deptinfo.bieres.classes.ConnexionMode;
+import ca.garneau.deptinfo.bieres.modeles.ModeleConnexion;
 import ca.garneau.deptinfo.bieres.modeles.ModeleRechBieres;
 import ca.garneau.deptinfo.util.ReqPrepBdUtil;
 
@@ -192,7 +194,10 @@ private static final long serialVersionUID = 1L;
 			
 			// On retourne immédiatement le code d'erreur HTTP 405;
 			// la réponse sera interceptée par la page d'erreur "erreur-405.jsp".
-			response.sendError(405);
+			
+			vue = "/WEB-INF/vues/gabarit-vues.jsp";
+			vueContenu = "/WEB-INF/vues/general/brasseurs.jsp";
+			vueSousTitre = "Les brasseurs de bière";
 			
 		// Ressource non disponible
 		// ========================
@@ -227,20 +232,35 @@ private static final long serialVersionUID = 1L;
 		// =========
 		if (this.uri.equals("/connexion")) {
 
-			// TEMPORAIRE POUR SIMULER LE FAIT D'ÊTRE CONNECTÉ
-			// ***********************************************
-			request.getSession().setAttribute("id_membre", 5);
-			request.getSession().setAttribute("nomUtil", "luna");
-			request.getSession().setAttribute("nom", "Luna");
-			request.getSession().setAttribute("modeConn", ConnexionMode.MEMBRE);
-			// NOTE: DEVRA ÊTRE IMPLEMENTÉ À L'AIDE DU BEAN DE CONNEXION
-			// *********************************************************
-
 			// Redirection côté client vers la section pour les membres.
 			// Note : Aucune vue ne sera produite comme réponse à cette requête;
 			// La requête subséquente vers la section "membre" (faite par le navigateur Web)
 			// produira la vue correspondant à la page d'accueil des membres.
-			response.sendRedirect("membre");
+			
+			ModeleConnexion mc = new ModeleConnexion();
+			
+			
+			
+			if (request.getParameter("identifiant") != null && request.getParameter("btnConnexion") != null){
+				// Verification et validation des informations.
+				try {
+					mc.connexion(
+						request.getParameter("identifiant"),
+						request.getParameter("motPasse"),
+						(request.getParameter("typeConn") != null));
+				}
+				catch (NamingException | SQLException e){
+					throw new ServletException(e);
+				}
+				
+			}
+			else if (request.getParameter("btnDeconnexion") != null){
+				request.getSession().setAttribute("connexionBean", null);
+			}
+			
+			request.getSession().setAttribute("modConnexion", mc);
+			
+			response.sendRedirect(request.getHeader("referer"));
 
 		// Méthode HTTP non permise
 		// ========================
