@@ -5,6 +5,8 @@
 
 <h2>Recherche de bières</h2>
 
+<c:set var="erreurRecherche" value="${requestScope.modRechBieres.erreurDeRecherche}"/>
+
 <!-- Formulaire de recherche de bières -->
 <div id="form-rech-bieres">
 	<form method="get" action="${pageContext.request.contextPath}/rech-bieres">
@@ -12,15 +14,36 @@
 			<%-- Champ texte pour le mot clé; initialisé avec la valeur du paramètre
 				 pour les critères de recherche --%>
 			<label for="mot-cle">Mot clé : </label>
-			<input type="text" name="mot-cle" id="mot-cle" value="${fn:trim(param['mot-cle'])}" />
+			<c:choose>
+				<c:when test="${sessionScope['mot-cle'] != null && erreurRecherche == null}">
+					<input type="text" name="mot-cle" id="mot-cle" value="${sessionScope['mot-cle']}" />	
+				</c:when>
+				<c:otherwise>
+					<input type="text" name="mot-cle" id="mot-cle" value="${fn:trim(param['mot-cle'])}" />
+				</c:otherwise>
+			</c:choose>
 		</p>
 		<p>
 			<label for="taux-minimum">Taux minimum : </label>
-			<input type="text" name="taux-minimum" id="taux-minimum" value="${fn:trim(param['taux-minimum'])}" />
+			<c:choose>
+				<c:when test="${sessionScope['taux-minimum'] != null && erreurRecherche == null}">
+					<input type="text" name="taux-minimum" id="taux-minimum" value="${sessionScope['taux-minimum']}" />	
+				</c:when>
+				<c:otherwise>
+					<input type="text" name="taux-minimum" id="taux-minimum" value="${fn:trim(param['taux-minimum'])}" />
+				</c:otherwise>
+			</c:choose>
 		</p>
 		<p>
 			<label for="taux-maximum">Taux maximum : </label>
-			<input type="text" name="taux-maximum" id="taux-maximum" value="${fn:trim(param['taux-maximum'])}" />
+			<c:choose>
+				<c:when test="${sessionScope['taux-maximum'] != null && erreurRecherche == null}">
+					<input type="text" name="taux-maximum" id="taux-maximum" value="${sessionScope['taux-maximum']}" />	
+				</c:when>
+				<c:otherwise>
+					<input type="text" name="taux-maximum" id="taux-maximum" value="${fn:trim(param['taux-maximum'])}" />
+				</c:otherwise>
+			</c:choose>
 		</p>
 		<p>
 			<%-- Requête pour les catégories --%>
@@ -53,65 +76,75 @@
 		
 		</p>
 		
-		<c:set var="erreurRecherche" scope="session" value="${requestScope.modRechBieres.erreurDeRecherche}"/>
-		<c:if test="${erreurRecherche != null}">
-			<p><c:out value="${erreurRecherche}"/></p>
-		</c:if>
-		
 		<p>
 			<input type="submit" name="rech-bieres" value="Rechercher les bieres" class="btn" />
 		</p>
 	</form>
 </div>  <!-- Fin de la division "formRechBieres" -->
 
+<c:choose>
 
-<c:if test="${not empty param['rech-bieres']}">
+	<c:when test="${erreurRecherche != null}">
+		<h2>Erreur!</h2>
+		<p>Erreur: <c:out value="${erreurRecherche}"/></p>
+	</c:when>
 
-	<h2>Bières trouvées</h2>
-
-	<c:choose>
-
-		<c:when test="${empty requestScope.modRechBieres.lstBieresTrouvees}">
-			<p>Aucune bière trouvée</p>
-		</c:when>
+	<c:when test="${not empty param['rech-bieres']}">
+	
+		<h2>Bières trouvées</h2>
+	
+		<c:choose>
 			
-		<c:otherwise>
-
-			<table>
-				<tr>
-					<th>Nom</th>
-					<th>Brasseur</th>
-					<th>Catégorie</th>
-					<th>Taux d'alcool</th>
-				</tr>
-				<%-- Parcours et affichage des bières trouvées --%>
-				<c:forEach var="biere" items="${requestScope.modRechBieres.lstBieresTrouvees}">
+			<c:when test="${empty requestScope.modRechBieres.lstBieresTrouvees}">
+				<p>Aucune bière trouvée</p>
+			</c:when>
+				
+			<c:otherwise>
+	
+				<table>
 					<tr>
-						<tr>
-						<td><a href="${pageContext.request.contextPath}/details-biere?noBiere=${biere.noBiere}">${biere.nom}</a></td>
-						<td>${biere.noBrasseur}</td>
-						<td>${biere.noCategorie}</td>
-						<td>${biere.tauxAlcool} %</td>
+						<th>Nom</th>
+						<th>Brasseur</th>
+						<th>Catégorie</th>
+						<th>Taux d'alcool</th>
 					</tr>
-				</c:forEach>
-			</table>
-			
-			<!-- Barre de navigation pour les pages de résultats de la recherche de bières -->
-			<div id="nav-page-bieres">
-
-				<a href="#">
-					<img src="${pageContext.request.contextPath}/images/fleche-gauche.png" alt="Page précédente"/>
-					Page précédente
-				</a>
-				|
-				<a href="#">
-					Page suivante
-					<img src="${pageContext.request.contextPath}/images/fleche-droite.png" alt="Page suivante"/>
-				</a>
-			</div>
-
-		</c:otherwise>
-
-	</c:choose>
-			
-</c:if>
+					<%-- Parcours et affichage des bières trouvées --%>
+					<c:forEach var="biere" items="${requestScope.modRechBieres.lstBieresTrouvees}">
+						<tr>
+							<tr>
+							<td><a href="${pageContext.request.contextPath}/details-biere?noBiere=${biere.noBiere}">${biere.nom}</a></td>
+							<td>${biere.noBrasseur}</td>
+							<c:choose>
+								<c:when test="${listecategories.rows[biere.noCategorie - 1] != null}">
+									<td>${listecategories.rows[biere.noCategorie - 1].nom}</td>
+								</c:when>
+								<c:otherwise>
+									<td>Aucune</td>
+								</c:otherwise>
+							</c:choose>	
+							<td>${biere.tauxAlcool} %</td>
+						</tr>
+					</c:forEach>
+				</table>
+				
+				<!-- Barre de navigation pour les pages de résultats de la recherche de bières -->
+				<div id="nav-page-bieres">
+	
+					<a href="#">
+						<img src="${pageContext.request.contextPath}/images/fleche-gauche.png" alt="Page précédente"/>
+						Page précédente
+					</a>
+					|
+					<a href="#">
+						Page suivante
+						<img src="${pageContext.request.contextPath}/images/fleche-droite.png" alt="Page suivante"/>
+					</a>
+				</div>
+	
+			</c:otherwise>
+	
+		</c:choose>
+				
+	</c:when>
+		
+</c:choose>

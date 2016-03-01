@@ -1,5 +1,6 @@
 package ca.garneau.deptinfo.bieres.modeles;
 
+import java.io.Console;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,6 +26,11 @@ public class ModeleRechBieres {
 	
 	// Erreur affiche lorsqu'il la requete n'est pas valide.
 	private String erreurDeRecherche;
+	
+	/**
+	 * Parametres de la recherche fructueuse.
+	 */
+	private ArrayList<String> lstParamRecherche;
 			
 	/**
 	 * Liste des bière trouvées.
@@ -39,6 +45,7 @@ public class ModeleRechBieres {
 	 */
 	public ModeleRechBieres() {
 		this.lstBieresTrouvees = null;
+		this.lstParamRecherche = null;
 	}
 
 	
@@ -81,8 +88,9 @@ public class ModeleRechBieres {
 	 * @param categorie : catégorie de la bière.
 	 * @throws NamingException S'il est impossible de trouver la source de données.
 	 * @throws SQLException S'il y a une erreur SQL quelconque.
+	 * @return Retourne si la recherche a ete fructueuse.
 	 */
-	public void rechercherBieres(String motCle, String strTauxMin, String strTauxMax, String categorie) throws NamingException, SQLException {
+	public ArrayList<String> rechercherBieres(String motCle, String strTauxMin, String strTauxMax, String categorie) throws NamingException, SQLException {
 
 		// Traitement des paramètres
 		// =========================
@@ -145,6 +153,7 @@ public class ModeleRechBieres {
 						
 						if (f_tauxMin < 0f){
 							setErreurDeRecherche("Le taux minimum doit etre plus grand que 0.0%.");
+							return null;
 						}
 						else{
 							b_tauxMinIsValid = true;
@@ -152,6 +161,7 @@ public class ModeleRechBieres {
 					}
 					catch (NumberFormatException nfe){
 						setErreurDeRecherche("Taux minimum doit etre un nombre valide.");
+						return null;
 					}
 				}
 				
@@ -161,6 +171,7 @@ public class ModeleRechBieres {
 						f_tauxMax = Float.parseFloat(strTauxMax);
 						if (f_tauxMax < 0){
 							setErreurDeRecherche("Le taux maximum doit etre plus grand que 0.0%.");
+							return null;
 						}
 						else{
 							b_tauxMaxIsValid = true;
@@ -168,13 +179,15 @@ public class ModeleRechBieres {
 					}
 					catch (NumberFormatException nfe){
 						setErreurDeRecherche("Taux maximum doit etre un nombre valide.");
+						return null;
 					}
 				}
 				
 				// Validation des taux ensembles.
 				if (b_tauxMinIsValid && b_tauxMaxIsValid){
-					if (f_tauxMin > f_tauxMax){
+					if (f_tauxMin >= f_tauxMax){
 						setErreurDeRecherche("Le taux minimum doit etre inferieur au taux maximum.");
+						return null;
 					}
 					else{
 						conditions.add("(abv > ? AND abv < ?)");
@@ -199,7 +212,6 @@ public class ModeleRechBieres {
 				// Ajout du paramètre à la liste des paramètres.
 				params.add(categorie);
 			}
-
 			
 			// Début de la requête (sans les conditions)
 			String reqSQLRechBieres = "SELECT id, brasseur_id, nom, cat_id, style_id, abv, description, image, derniere_modification FROM bieres";
@@ -213,7 +225,6 @@ public class ModeleRechBieres {
 					reqSQLRechBieres += " AND " + conditions.get(i);
 				}
 			}
-
 			
 			// Ajout du critère de tri (en ordre croissant de nom).
 			reqSQLRechBieres += " ORDER BY nom";
@@ -261,7 +272,18 @@ public class ModeleRechBieres {
 
 			// Fermeture de la connexion à la BD.
 			utilBd.fermerConnexion();
+			
+			this.lstParamRecherche = new ArrayList<String>();
+			
+			this.lstParamRecherche.add(motCle);
+			this.lstParamRecherche.add(strTauxMin);
+			this.lstParamRecherche.add(strTauxMax);
+			this.lstParamRecherche.add(categorie);
+			
+			return this.lstParamRecherche;
 		}
+		
+		return null;
 		
 	}
 	

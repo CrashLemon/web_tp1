@@ -2,6 +2,7 @@ package ca.garneau.deptinfo.bieres.beans;
 
 import ca.garneau.deptinfo.bieres.classes.ConnexionMode;
 
+
 /**
  * Bean permettant de conserver de l'information sur l'utilisateur connecté sur le site Web.
  * Il y a deux types d'utilisateur : les membres et les administrateurs.

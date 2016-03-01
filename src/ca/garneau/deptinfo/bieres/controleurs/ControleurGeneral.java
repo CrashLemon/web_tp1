@@ -1,7 +1,9 @@
 package ca.garneau.deptinfo.bieres.controleurs;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
@@ -9,8 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ca.garneau.deptinfo.bieres.classes.Biere;
 import ca.garneau.deptinfo.bieres.classes.ConnexionMode;
 import ca.garneau.deptinfo.bieres.modeles.ModeleRechBieres;
+import ca.garneau.deptinfo.util.ReqPrepBdUtil;
+
 
 
 /**
@@ -89,12 +94,20 @@ private static final long serialVersionUID = 1L;
 				// Les informations produites (i.e., la liste des bières trouvés)
 				// sont conservées dans un attribut de la requête.
 				try {
-					mrf.rechercherBieres(
+					ArrayList<String> paramRecherche = mrf.rechercherBieres(
 							request.getParameter("mot-cle"),
 							request.getParameter("taux-minimum"),
 							request.getParameter("taux-maximum"),
 							request.getParameter("categorie")
 							);
+					
+					if (paramRecherche != null){
+						request.getSession().setAttribute("mot-cle", paramRecherche.get(0));						request.getSession().setAttribute("mot-cle", paramRecherche.get(0));
+						request.getSession().setAttribute("taux-minimum", paramRecherche.get(1));
+						request.getSession().setAttribute("taux-maximum", paramRecherche.get(2));
+						request.getSession().setAttribute("categorie", paramRecherche.get(3));
+					}
+					
 				} catch (NamingException | SQLException e) {
 					throw new ServletException(e);
 				}
@@ -113,6 +126,55 @@ private static final long serialVersionUID = 1L;
 
 		// Détails d'une bière.
 		} else if (this.uri.equals("/details-biere")) {
+			
+			// Verification que cest bien un numero de biere.
+			try{
+				int noBiere = Integer.parseInt(request.getParameter("noBiere"));
+
+				// Début de la requête (sans les conditions)
+				String reqSQLRechBieres = "SELECT id, brasseur_id, nom, cat_id, style_id, abv, description, image, derniere_modification FROM bieres " +
+										"WHERE id = " + noBiere;
+
+
+				// Source de données (JNDI).
+				String nomDataSource = "jdbc/bieres";
+
+				// Création de l'objet pour l'accès à la BD.
+				ReqPrepBdUtil utilBd = new ReqPrepBdUtil(nomDataSource);
+
+				// Obtention de la connexion à la BD.
+				utilBd.ouvrirConnexion();
+				
+				// Préparation de la requête SQL.
+				utilBd.preparerRequete(reqSQLRechBieres, false);
+				
+				// Exécution de la requête tout en lui passant les paramètres pour l'exécution.
+				// Note : On peut passer comme paramètres un tableau directement.
+				ResultSet rs = utilBd.executerRequeteSelect();
+
+				// Objet pour conserver une bière trouvée.
+				Biere biere;
+				// Parcours des bières trouvées.
+
+				if (rs.first()){
+					biere = new Biere(
+							rs.getInt("id"),
+							rs.getInt("brasseur_id"),
+							rs.getString("nom"),
+							rs.getInt("cat_id"),
+							rs.getInt("style_id"),
+							rs.getInt("abv"),
+							rs.getDate("derniere_modification"),
+							rs.getString("description"),
+							rs.getString("image"));
+					
+					request.setAttribute("biere", biere);
+				}
+			}
+			catch(NumberFormatException | NamingException | SQLException e){
+				throw new ServletException(e);
+			}
+			
 			vue = "/WEB-INF/vues/gabarit-vues.jsp";
 			vueContenu = "/WEB-INF/vues/general/biere.jsp";
 			vueSousTitre = "Détails d'une bière";
