@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ca.garneau.deptinfo.bieres.classes.ConnexionMode;
+import ca.garneau.deptinfo.bieres.modeles.ModeleConnexion;
 
 /**
  * Contrôleur-répartiteur pour la section réservée au personnel (staff).
@@ -60,7 +61,11 @@ public class ControleurAdmin extends HttpServlet {
 		
 		// Récupération du mode de connexion dans la session utilisateur.
 		// *** À MODIFIER (UTILISATION DU BEAN DE CONNEXION) ***
-		ConnexionMode modeConn = (ConnexionMode) request.getSession().getAttribute("modeConn");
+		ModeleConnexion mc = (ModeleConnexion) request.getSession().getAttribute("modConnexion");
+		ConnexionMode modeConn = null;
+		
+		if (mc != null)
+			modeConn = mc.getConnexionBean().getModeConn();
 
 		// Contrôle d'accès à la section pour les employés.
 		if (modeConn == null || modeConn != ConnexionMode.ADMIN) {
@@ -85,7 +90,9 @@ public class ControleurAdmin extends HttpServlet {
 
 		// Opérations pré-traitement et suite des opérations, si nécessaire.
 		if (preTraitement(request, response)) {
-
+			
+			ModeleConnexion mc = (ModeleConnexion) request.getSession().getAttribute("modConnexion");
+			
 			// ================================
 			// Gestion de la ressource demandée
 			// ================================
@@ -98,8 +105,8 @@ public class ControleurAdmin extends HttpServlet {
 				vueContenu = "/WEB-INF/vues/admin/accueil-admin.jsp";
 				
 				// *** À MODIFIER (UTILISATION DU BEAN DE CONNEXION) ***
-				String nom = (String) request.getSession().getAttribute("nom");
-				String nomUtil = (String) request.getSession().getAttribute("nomUtil");
+				String nom = (String) mc.getConnexionBean().getNom();
+				String nomUtil = String.valueOf(mc.getConnexionBean().getNoUtil());
 				vueSousTitre = "Page personnelle de " + nom + " (" + nomUtil + ")";
 
 			// Ajout d'une bière

@@ -192,15 +192,11 @@ private static final long serialVersionUID = 1L;
 		// ========================
 		} else if (this.uri.equals("/connexion")) {
 			
-			// On retourne immédiatement le code d'erreur HTTP 405;
-			// la réponse sera interceptée par la page d'erreur "erreur-405.jsp".
-			
-			vue = "/WEB-INF/vues/gabarit-vues.jsp";
-			vueContenu = "/WEB-INF/vues/general/brasseurs.jsp";
-			vueSousTitre = "Les brasseurs de bière";
-			
 		// Ressource non disponible
 		// ========================
+		} else if (this.uri.equals("/deconnexion")) {
+			request.getSession().setAttribute("modConnexion", null);
+			response.sendRedirect(request.getHeader("rech-bieres"));
 		} else {
 			// On retourne immédiatement le code d'erreur HTTP 404;
 			// la réponse sera interceptée par la page d'erreur "erreur-404.jsp".
@@ -241,7 +237,7 @@ private static final long serialVersionUID = 1L;
 			
 			
 			
-			if (request.getParameter("identifiant") != null && request.getParameter("btnConnexion") != null){
+			if (request.getParameter("identifiant") != null){
 				// Verification et validation des informations.
 				try {
 					mc.connexion(
@@ -254,13 +250,21 @@ private static final long serialVersionUID = 1L;
 				}
 				
 			}
-			else if (request.getParameter("btnDeconnexion") != null){
-				request.getSession().setAttribute("connexionBean", null);
-			}
-			
+
+			// On set le modele de connexion.
 			request.getSession().setAttribute("modConnexion", mc);
 			
-			response.sendRedirect(request.getHeader("referer"));
+			// On redirect dependement du resultat.
+			if (mc.getConnexionBean() != null){
+				if (mc.getConnexionBean().getModeConn() == ConnexionMode.ADMIN){
+					response.sendRedirect("admin");
+				}
+				else if (mc.getConnexionBean().getModeConn() == ConnexionMode.MEMBRE){
+					response.sendRedirect("membre");
+				}
+			}
+			else
+				response.sendRedirect(request.getHeader("referer"));
 
 		// Méthode HTTP non permise
 		// ========================

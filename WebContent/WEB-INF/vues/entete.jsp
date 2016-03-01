@@ -28,7 +28,7 @@
 			</form>
 		</c:when>
 		<c:otherwise>
-			<form method="post" action="${pageContext.request.contextPath}/connexion">
+			<form method="get" action="${pageContext.request.contextPath}/deconnexion">
 				<c:choose>
 					<c:when test="${sessionScope.modConnexion.connexionBean.getModeConn() == 'ADMIN'}">
 						<p>(${sessionScope.modConnexion.connexionBean.nom})</p>
