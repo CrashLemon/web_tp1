@@ -143,6 +143,8 @@ public class ModeleConnexion {
 			else{
 				connexionBean.setModeConn(ConnexionMode.MEMBRE);
 				connexionBean.setNomUtil(rs.getString("username"));
+				connexionBean.setEmail(rs.getString("email"));
+				connexionBean.setDernierLogin(rs.getString("dernier_login"));
 			}
 
 		}

@@ -196,7 +196,9 @@ private static final long serialVersionUID = 1L;
 		// ========================
 		} else if (this.uri.equals("/deconnexion")) {
 			request.getSession().setAttribute("modConnexion", null);
-			response.sendRedirect(request.getHeader("rech-bieres"));
+			vue = "/WEB-INF/vues/gabarit-vues.jsp";
+			vueContenu = "/WEB-INF/vues/general/deconnexion.jsp";
+			vueSousTitre = "Les brasseurs de bière";
 		} else {
 			// On retourne immédiatement le code d'erreur HTTP 404;
 			// la réponse sera interceptée par la page d'erreur "erreur-404.jsp".

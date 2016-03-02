@@ -14,7 +14,7 @@ import ca.garneau.deptinfo.bieres.modeles.ModeleConnexion;
  * Contrôleur-répartiteur pour la section réservée au personnel (staff).
  * @author Stéphane Lapointe
  */
-public class ControleurAdmin extends HttpServlet {
+public class ControleurMembre extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	// Attributs
@@ -68,7 +68,7 @@ public class ControleurAdmin extends HttpServlet {
 			modeConn = mc.getConnexionBean().getModeConn();
 
 		// Contrôle d'accès à la section pour les employés.
-		if (modeConn == null || modeConn != ConnexionMode.ADMIN) {
+		if (modeConn == null || modeConn != ConnexionMode.MEMBRE) {
 			// Non connecté en tant qu'admin; on retourne un code d'erreur
 			// HTTP 401 qui sera intercepté par la page d'erreur "erreur-401.jsp".
 			response.sendError(401);
@@ -99,21 +99,20 @@ public class ControleurAdmin extends HttpServlet {
 
 			// Accueil - Employés
 			// =================
-			if (uri.equals("/admin/") || uri.equals("/admin")) {
+			if (uri.equals("/membre/") || uri.equals("/membre")) {
 				// Paramètres pour la vue créée à partir du gabarit.
 
 				vue = "/WEB-INF/vues/gabarit-vues.jsp";
-				vueContenu = "/WEB-INF/vues/admin/accueil-admin.jsp";
+				vueContenu = "/WEB-INF/vues/membre/accueil-membre.jsp";
 				
 				// *** À MODIFIER (UTILISATION DU BEAN DE CONNEXION) ***
-				String nom = (String) mc.getConnexionBean().getNom();
-				String nomUtil = String.valueOf(mc.getConnexionBean().getNoUtil());
-				vueSousTitre = "Page personnelle de " + nom + " (" + nomUtil + ")";
+				String nom = (String) mc.getConnexionBean().getNomUtil();
+				vueSousTitre = "Page personnelle de " + nom;
 
 			// Ajout d'une bière
 			// ==============================
 			// *** NOTE : Devrait utiliser la méthode POST ***
-			} else if (uri.equals("/admin/ajout-biere")) {
+			} else if (uri.equals("/membre/ajout-critique")) {
 
 				// *** En construction ***
 				vue = "/WEB-INF/vues/gabarit-vues.jsp";
@@ -150,8 +149,8 @@ public class ControleurAdmin extends HttpServlet {
 	
 			// Méthode HTTP non permise
 			// ========================
-			if (uri.equals("/admin/") || uri.equals("/admin")
-					|| uri.equals("/admin/ajout-biere")) {
+			if (uri.equals("/membre/") || uri.equals("/membre")
+					|| uri.equals("/membre/ajout-critique")) {
 				response.sendError(405);
 				
 			// Ressource non disponible

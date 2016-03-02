@@ -24,6 +24,16 @@ public class ConnexionBean {
 	private String nom;
 	
 	/**
+	 * Email complet.
+	 */
+	private String email;
+	
+	/**
+	 * Le dernier login.
+	 */
+	private String dernierLogin;
+	
+	/**
 	 * Numéro d'utilisateur.
 	 */
 	private int noUtil;
@@ -97,7 +107,39 @@ public class ConnexionBean {
 	public void setNoUtil(int noUtil) {
 		this.noUtil = noUtil;
 	}
+	
+	/**
+	 * Set le email.
+	 * @param email
+	 */
+	public void setEmail(String email){
+		this.email = email;
+	}
+	
+	/**
+	 * Return email
+	 * @return email.
+	 */
+	public String getEmail(){
+		return this.email;
+	}
+	
+	/**
+	 * Return le dernier login.
+	 * @param dernierLogin
+	 */
+	public void setDernierLogin(String dernierLogin){
+		this.dernierLogin = dernierLogin;
+	}
 
+	/**
+	 * Get le dernier login
+	 * @return
+	 */
+	public String getDernierLogin(){
+		return this.dernierLogin;
+	}
+	
 	/**
 	 * Retourne le mode de connexion.
 	 * @return Le mode de connexion.

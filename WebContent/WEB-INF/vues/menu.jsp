@@ -6,7 +6,12 @@
 	<li><a href="${pageContext.request.contextPath}/brasseurs">Les brasseurs</a></li>
 	
 	<!-- À changer -->
-	<c:if test="${sessionScope['modeConn'] == 'ADMIN'}">
+	<c:if test="${sessionScope.modConnexion.connexionBean.getModeConn() == 'ADMIN'}">
 		<li><a href="${pageContext.request.contextPath}/admin">Vos informations</a></li>
+		<li><a href="${pageContext.request.contextPath}/admin/ajout-biere">Ajout d'une bière</a></li>
+	</c:if>
+	
+	<c:if test="${sessionScope.modConnexion.connexionBean.getModeConn() == 'MEMBRE'}">
+		<li><a href="${pageContext.request.contextPath}/membre">Vos informations</a></li>
 	</c:if>
 </ul>  <!-- Fin "menu-princ" -->

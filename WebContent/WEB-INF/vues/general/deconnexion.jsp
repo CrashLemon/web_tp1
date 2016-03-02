@@ -4,7 +4,4 @@
 
 <%-- Requête sélectionnant les informations du membre du personnel --%>
 
-<h2>Vos informations</h2>
-
-<p>Votre No. d'utilisateur: ${sessionScope.modConnexion.connexionBean.noUtil}</p>
-<p>Votre nom: ${sessionScope.modConnexion.connexionBean.nom}</p>
+<h2>Vous vous etes deconnecte!</h2>

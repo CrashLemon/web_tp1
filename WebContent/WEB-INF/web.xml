@@ -19,6 +19,15 @@
     <url-pattern>/admin/*</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>ControleurMembreServlet</servlet-name>
+    <servlet-class>ca.garneau.deptinfo.bieres.controleurs.ControleurMembre</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ControleurMembreServlet</servlet-name>
+    <url-pattern>/membre/*</url-pattern>
+  </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>*.css</url-pattern>
